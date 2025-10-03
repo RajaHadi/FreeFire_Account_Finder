@@ -186,7 +186,7 @@ with col2:
     region = st.text_input("Region (default 'pk')", value="pk")
 
 run_agent = st.button("Lookup (Agent)")
-run_api_only = st.button("Call API only (no agent)")
+
 
 summary_placeholder = st.empty()
 raw_placeholder = st.empty()
@@ -223,24 +223,7 @@ if run_agent:
         summary_placeholder.code(final_output)
 
     
-# API-only action
-if run_api_only:
-    if not player_uid.strip():
-        st.error("PlayerUid is required.")
-    elif not FIXED_USERUID or not FIXED_API:
-        st.error("Missing FREEFIRE_USERUID/FREEFIRE_API. Set env variables or enter them in the credential fields.")
-    else:
-        with st.spinner("Calling Free Fire API..."):
-            api_result = get_ff_account(player_uid, region)
-            st.session_state["last_ff_api_response"] = api_result
-            # show the raw API result
-        st.subheader("API-only result")
-        st.json(api_result)
-        try:
-            blob = json.dumps(api_result, indent=2, ensure_ascii=False)
-            st.download_button("Download raw JSON", data=blob, file_name=f"ff_{player_uid}_api.json", mime="application/json")
-        except Exception:
-            pass
+
 
 st.markdown("---")
 st.caption("Security tip: Do not commit keys to source control. Prefer setting FREEFIRE_USERUID and FREEFIRE_API as env vars.")
